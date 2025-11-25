@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import joblib
 import nltk
@@ -6,13 +8,29 @@ import re
 from nltk import word_tokenize, sent_tokenize
 import pandas as pd
 
-nltk.download('punkt')
+nltk.download("punkt")
 
 # Cargar modelo y scaler
 model = joblib.load("model_logreg.pkl")
 scaler = joblib.load("scaler.pkl")
 
 app = FastAPI()
+
+# ============
+#  SERVIR WEB
+# ============
+
+# Servir carpeta "static"
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Servir index.html al entrar a la página
+@app.get("/")
+def read_root():
+    return FileResponse("templates/index.html")
+
+# ============
+#  API DE ML
+# ============
 
 class InputText(BaseModel):
     text: str
@@ -47,9 +65,11 @@ def extract_features(text):
     except:
         return [0]*5
 
+
 @app.post("/predict")
 def predict(data: InputText):
     features = extract_features(data.text)
+
     df = pd.DataFrame([features], columns=[
         "avg_sentence_length",
         "avg_word_length",
