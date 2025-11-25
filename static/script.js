@@ -11,9 +11,14 @@ document.getElementById("predict-form").addEventListener("submit", async (e) => 
 
     const data = await response.json();
 
-    document.getElementById("result").innerHTML = `
-        <h3>Resultado: ${data.label}</h3>
-        <p><strong>Probabilidad Estudiante:</strong> ${data.probabilities.student}%</p>
-        <p><strong>Probabilidad IA:</strong> ${data.probabilities.ai}%</p>
-    `;
+    console.log("DATA:", data); // <--- MUY útil para debug
+
+    document.getElementById("result").innerText =
+        "Resultado: " + data.prediction;
+
+    document.getElementById("prob-student").innerText =
+        "Probabilidad Estudiante: " + data.probabilities.student.toFixed(2) + "%";
+
+    document.getElementById("prob-ai").innerText =
+        "Probabilidad IA: " + data.probabilities.ai.toFixed(2) + "%";
 });

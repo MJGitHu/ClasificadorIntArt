@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    <h1>Detector de Texto</h1>
+    <h1>Clasificador de textos</h1>
     <p>Escribe un texto y el sistema determinará si fue generado por IA o por un estudiante.</p>
 
     <form id="predict-form">
@@ -15,7 +15,9 @@
         <button type="submit">Analizar</button>
     </form>
 
-    <div id="result"></div>
+    <p id="result"></p>
+    <p id="prob-student"></p>
+    <p id="prob-ai"></p>
 
     <script src="/static/script.js"></script>
 </body>
