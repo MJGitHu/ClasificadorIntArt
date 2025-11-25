@@ -2,15 +2,13 @@ import nltk
 from nltk import word_tokenize, sent_tokenize
 import re
 
-nltk.download("punkt")
-
 def extract_features_single(text):
     tokens = word_tokenize(text.lower())
     words = [w for w in tokens if w.isalpha()]
     sentences = sent_tokenize(text)
 
     if len(words) == 0 or len(sentences) == 0:
-        return [0, 0, 0, 0, 0]
+        return [0,0,0,0,0]
 
     avg_sentence_length = len(words) / len(sentences)
     avg_word_length = sum(len(w) for w in words) / len(words)
