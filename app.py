@@ -65,11 +65,14 @@ def extract_features(text):
     except:
         return [0]*5
 
-
 @app.post("/predict")
 def predict(data: InputText):
-    features = extract_features(data.text)
+    text = data.text
 
+    # Extraer características
+    features = extract_features(text)
+    print("FEATURES:", features)  # <--- Debug
+    
     df = pd.DataFrame([features], columns=[
         "avg_sentence_length",
         "avg_word_length",
@@ -78,21 +81,21 @@ def predict(data: InputText):
         "punctuation_density"
     ])
 
+    # Escalar
     scaled = scaler.transform(df)
+    print("SCALED:", scaled)  # <--- Debug
 
-    # Predicción dura
+    # Predicción y probabilidades
     pred = model.predict(scaled)[0]
-
-    # Probabilidades
     probs = model.predict_proba(scaled)[0]
-    prob_student = float(probs[model.classes_.tolist().index("student")])
-    prob_ai = float(probs[model.classes_.tolist().index("ai")])
+    print("PRED:", pred)
+    print("PROBS:", probs)
 
     return {
         "prediction": pred,
         "label": "🤖 IA" if pred == "ai" else "🧑‍🎓 Estudiante",
         "probabilities": {
-            "student": round(prob_student * 100, 2),
-            "ai": round(prob_ai * 100, 2)
+            "student": round(probs[0] * 100, 2),
+            "ai": round(probs[1] * 100, 2)
         }
     }
