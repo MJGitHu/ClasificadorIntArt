@@ -1,33 +1,67 @@
-from flask import Flask, request, jsonify, render_template
+from fastapi import FastAPI
+from pydantic import BaseModel
 import joblib
-from features import extract_features_single
-import numpy as np
+import nltk
+import re
+from nltk import word_tokenize, sent_tokenize
+import pandas as pd
 
-app = Flask(__name__)
+nltk.download('punkt')
 
-# Cargar modelo
-model = joblib.load("model_rf.pkl")
+# Cargar modelo y scaler
+model = joblib.load("model_logreg.pkl")
+scaler = joblib.load("scaler.pkl")
 
-@app.route("/")
-def home():
-    return render_template("index.html")
+app = FastAPI()
 
-@app.route("/predict", methods=["POST"])
-def predict():
-    data = request.get_json()
-    text = data["text"]
+class InputText(BaseModel):
+    text: str
 
-    # Extraer features
-    features = extract_features_single(text)
+def extract_features(text):
+    try:
+        tokens = word_tokenize(text.lower())
+        words = [w for w in tokens if w.isalpha()]
+        sentences = sent_tokenize(text)
 
-    # Convertir a array 2D
-    features = np.array(features).reshape(1, -1)
+        if len(words) == 0 or len(sentences) == 0:
+            return [0]*5
 
-    # Predicción
-    pred = model.predict(features)[0]
+        avg_sentence_length = len(words) / len(sentences)
+        avg_word_length = sum(len(w) for w in words) / len(words)
+        ttr = len(set(words)) / len(words)
 
-    return jsonify({"prediction": pred})
+        connectors = [
+            "however", "therefore", "moreover", "furthermore", "thus",
+            "in conclusion", "for example", "on the other hand"
+        ]
+        connective_ratio = sum(text.lower().count(c) for c in connectors) / len(sentences)
+        punctuation_density = len(re.findall(r"[,.!?;:]", text)) / len(words)
 
+        return [
+            avg_sentence_length,
+            avg_word_length,
+            ttr,
+            connective_ratio,
+            punctuation_density
+        ]
+    except:
+        return [0]*5
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+@app.post("/predict")
+def predict(data: InputText):
+    features = extract_features(data.text)
+    df = pd.DataFrame([features], columns=[
+        "avg_sentence_length",
+        "avg_word_length",
+        "ttr",
+        "connective_ratio",
+        "punctuation_density"
+    ])
+
+    scaled = scaler.transform(df)
+    pred = model.predict(scaled)[0]
+
+    return {
+        "prediction": pred,
+        "label": "🤖 IA" if pred == "ai" else "🧑‍🎓 Estudiante"
+    }
