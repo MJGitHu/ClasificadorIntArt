@@ -79,9 +79,20 @@ def predict(data: InputText):
     ])
 
     scaled = scaler.transform(df)
+
+    # Predicción dura
     pred = model.predict(scaled)[0]
+
+    # Probabilidades
+    probs = model.predict_proba(scaled)[0]
+    prob_student = float(probs[model.classes_.tolist().index("student")])
+    prob_ai = float(probs[model.classes_.tolist().index("ai")])
 
     return {
         "prediction": pred,
-        "label": "🤖 IA" if pred == "ai" else "🧑‍🎓 Estudiante"
+        "label": "🤖 IA" if pred == "ai" else "🧑‍🎓 Estudiante",
+        "probabilities": {
+            "student": round(prob_student * 100, 2),
+            "ai": round(prob_ai * 100, 2)
+        }
     }

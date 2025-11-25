@@ -10,6 +10,10 @@ document.getElementById("predict-form").addEventListener("submit", async (e) => 
     });
 
     const data = await response.json();
-    document.getElementById("result").innerText =
-        "Predicción: " + data.prediction;
+
+    document.getElementById("result").innerHTML = `
+        <h3>Resultado: ${data.label}</h3>
+        <p><strong>Probabilidad Estudiante:</strong> ${data.probabilities.student}%</p>
+        <p><strong>Probabilidad IA:</strong> ${data.probabilities.ai}%</p>
+    `;
 });
