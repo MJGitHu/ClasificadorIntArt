@@ -1,5 +1,6 @@
 # ClasificadorIntArt
 Sistema de detección de IA usada en trabajos académicos
+
 Descripción General
 
 Este proyecto consiste en un sistema capaz de clasificar textos y determinar si fueron escritos por un estudiante humano o generados por una inteligencia artificial (IA).
