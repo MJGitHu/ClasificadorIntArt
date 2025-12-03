@@ -11,7 +11,7 @@ document.getElementById("predict-form").addEventListener("submit", async (e) => 
 
     const data = await response.json();
 
-    console.log("DATA:", data); // <--- MUY útil para debug
+    console.log("DATA:", data);
 
     document.getElementById("result").innerText =
         "Resultado: " + data.prediction;

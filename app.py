@@ -8,11 +8,12 @@ import re
 from nltk import word_tokenize, sent_tokenize
 import pandas as pd
 
+#Recursos para trabajar el texto.
 nltk.download("punkt")
 nltk.download('punkt_tab')  
 nltk.download('averaged_perceptron_tagger')
 
-# Cargar modelo y scaler
+# Cargar modelo y scaler (regresión logística)
 model = joblib.load("model_logreg.pkl")
 scaler = joblib.load("scaler.pkl")
 
@@ -37,6 +38,7 @@ def read_root():
 class InputText(BaseModel):
     text: str
 
+#tokenizador
 def extract_features(text):
     text = text.strip()
     if len(text) < 5:
