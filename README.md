@@ -18,7 +18,7 @@ Características del Sistema
 
 El proyecto implementa:
 
-✔ Extracción automática de características lingüísticas, como:
+- Extracción automática de características lingüísticas, como:
 
 Longitud promedio de oraciones
 
@@ -30,9 +30,9 @@ Frecuencia de conectores lógicos
 
 Densidad de puntuación
 
-✔ Escalado de variables mediante StandardScaler
+- Escalado de variables mediante StandardScaler
 
-✔ Modelo predictivo entrenado con:
+- Modelo predictivo entrenado con:
 
 Regresión Logística
 
@@ -42,11 +42,11 @@ División en entrenamiento y prueba
 
 Métricas de desempeño (accuracy, classification report)
 
-✔ API desarrollada con FastAPI
+- API desarrollada con FastAPI
 
-✔ Frontend simple con HTML + CSS + JS
+- Frontend simple con HTML + CSS + JS
 
-✔ Despliegue en Render
+- Despliegue en Render
 
 Versión en Línea (Deploy)
 La aplicación completa se encuentra desplegada en:
